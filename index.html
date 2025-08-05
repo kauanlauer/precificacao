@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Curso de Precificação</title>
+  <script type="module">
+    // Importações do Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
+
+    // Configuração do seu Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAhD-K0KUEH-jc6t3HKGa5zQVwt8dTM6H4",
+      authDomain: "cursoprecificacao-464f0.firebaseapp.com",
+      projectId: "cursoprecificacao-464f0",
+      storageBucket: "cursoprecificacao-464f0.appspot.com",
+      messagingSenderId: "835557952690",
+      appId: "1:835557952690:web:d2e6f84856d5eec1084dab"
+    };
+
+    // Inicializa o Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    // Elementos da interface
+    const statusDiv = document.getElementById("status");
+    const loginBtn = document.getElementById("login");
+
+    // Login com Google
+    loginBtn.addEventListener("click", async () => {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        validarChave(user.email);
+      } catch (error) {
+        alert("Erro ao fazer login: " + error.message);
+      }
+    });
+
+    // Após login
+    async function validarChave(email) {
+      const chave = prompt("Digite sua chave de ativação:");
+      if (!chave) return alert("Chave não informada.");
+
+      const ref = doc(db, "chaves", chave);
+      const snap = await getDoc(ref);
+
+      if (!snap.exists()) {
+        return alert("❌ Chave inválida.");
+      }
+
+      const data = snap.data();
+
+      if (data.usada && data.email !== email) {
+        return alert("❌ Esta chave já foi usada por outro e-mail.");
+      }
+
+      if (!data.usada) {
+        await updateDoc(ref, { usada: true, email: email });
+        alert("✅ Ativação concluída com sucesso!");
+      } else {
+        alert("🔓 Bem-vindo de volta, acesso liberado.");
+      }
+
+      statusDiv.innerText = "✅ Curso desbloqueado para: " + email;
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #login {
+      padding: 10px 20px;
+      background-color: #0d6efd;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+      color: green;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <button id="login">Entrar com Google</button>
+    <div id="status"></div>
+  </div>
+</body>
+</html>
