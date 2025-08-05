@@ -1,99 +1,231 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ativação Curso Precificação</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-<script type="module">
-// Importações Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-app.js";
-import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-firestore.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-auth.js";
-
-// Config Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyAhD-K0KUEH-jc6t3HKGa5zQVwt8dTM6H4",
-  authDomain: "cursoprecificacao-464f0.firebaseapp.com",
-  projectId: "cursoprecificacao-464f0",
-  storageBucket: "cursoprecificacao-464f0.appspot.com",
-  messagingSenderId: "835557952690",
-  appId: "1:835557952690:web:d2e6f84856d5eec1084dab"
-};
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
-
-window.addEventListener("DOMContentLoaded", () => {
-  const container = document.getElementById("container");
-  let chaveValidada = null;
-
-  container.innerHTML = `
-    <h3 class="mb-3">Digite sua chave de ativação</h3>
-    <input id="inputChave" type="text" class="form-control mb-2" placeholder="Ex: ABC123-KAUAN" />
-    <button id="btnValidarChave" class="btn btn-primary">Validar Chave</button>
-    <div id="msg" class="mt-3 text-danger"></div>
-  `;
-
-  document.getElementById("btnValidarChave").onclick = async () => {
-    const chave = document.getElementById("inputChave").value.trim().toUpperCase();
-    const msg = document.getElementById("msg");
-    msg.textContent = "";
-
-    if (!chave) {
-      msg.textContent = "Por favor, digite a chave.";
-      return;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ativação Curso Precificação</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     }
-
-    // Verificar no Firestore
-    const docRef = doc(db, "chaves", chave);
-    const docSnap = await getDoc(docRef);
-
-    if (!docSnap.exists()) {
-      msg.textContent = "Chave inválida.";
-      return;
+    .card {
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
     }
-
-    const data = docSnap.data();
-    if (data.usada) {
-      msg.textContent = "Chave já foi usada.";
-      return;
+    .btn-google {
+      background-color: #4285F4;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-
-    chaveValidada = chave;
-
-    // Trocar para login Google
-    container.innerHTML = `
-      <h3 class="mb-3">Chave validada! Agora faça login com Google</h3>
-      <button id="btnLoginGoogle" class="btn btn-success">Entrar com Google</button>
-      <div id="msgLogin" class="mt-3 text-danger"></div>
-    `;
-
-    document.getElementById("btnLoginGoogle").onclick = async () => {
-      try {
-        const resultado = await signInWithPopup(auth, provider);
-        const user = resultado.user;
-
-        // Atualizar o documento da chave com email e usada = true
-        await updateDoc(docRef, {
-          usada: true,
-          email: user.email
-        });
-
-        container.innerHTML = `
-          <h3 class="text-success">✅ Curso ativado para: ${user.email}</h3>
-          <p>Obrigado por adquirir o curso!</p>
-        `;
-      } catch (error) {
-        document.getElementById("msgLogin").textContent = "Erro no login: " + error.message;
-      }
-    };
-  };
-});
-</script>
+    .btn-google:hover {
+      background-color: #357ABD;
+      color: white;
+    }
+    .google-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+    }
+    .loading-spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 10px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .success-screen {
+      text-align: center;
+      padding: 20px;
+    }
+    .success-icon {
+      font-size: 60px;
+      color: #28a745;
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
-<body class="d-flex flex-column align-items-center justify-content-center vh-100 bg-light">
-  <div id="container" class="p-4 rounded shadow bg-white" style="max-width: 400px; width: 100%;"></div>
+<body class="d-flex align-items-center justify-content-center min-vh-100">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-4">
+        <div class="card">
+          <div class="card-body p-4" id="container">
+            <!-- Conteúdo será injetado via JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    // Firebase SDK importações
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-app.js";
+    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-firestore.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAhD-K0KUEH-jc6t3HKGa5zQVwt8dTM6H4",
+      authDomain: "cursoprecificacao-464f0.firebaseapp.com",
+      projectId: "cursoprecificacao-464f0",
+      storageBucket: "cursoprecificacao-464f0.appspot.com",
+      messagingSenderId: "835557952690",
+      appId: "1:835557952690:web:d2e6f84856d5eec1084dab"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const container = document.getElementById("container");
+      let chaveValidada = null;
+
+      function mostrarMensagem(texto, tipo = "danger") {
+        const msg = document.getElementById("msg") || document.createElement("div");
+        msg.id = "msg";
+        msg.className = `alert alert-${tipo} mt-3`;
+        msg.textContent = texto;
+        if (!document.getElementById("msg")) {
+          container.appendChild(msg);
+        // Remove a mensagem após 5 segundos
+          setTimeout(() => {
+            msg.remove();
+          }, 5000);
+        }
+      }
+
+      function mostrarTelaChave() {
+        container.innerHTML = `
+          <h3 class="mb-4 text-center">Ativação do Curso</h3>
+          <p class="text-muted mb-4">Digite sua chave de ativação para continuar</p>
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="inputChave" placeholder="Ex: ABC123-KAUAN" autofocus>
+            <label for="inputChave">Chave de ativação</label>
+          </div>
+          <button id="btnValidarChave" class="btn btn-primary w-100 py-2">
+            Validar Chave
+          </button>
+          <div id="msg"></div>
+        `;
+
+        document.getElementById("btnValidarChave").addEventListener("click", validarChave);
+        document.getElementById("inputChave").addEventListener("keypress", (e) => {
+          if (e.key === "Enter") validarChave();
+        });
+      }
+
+      async function validarChave() {
+        const btn = document.getElementById("btnValidarChave");
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Validando...';
+
+        const chave = document.getElementById("inputChave").value.trim().toUpperCase();
+        
+        if (!chave) {
+          mostrarMensagem("Por favor, digite a chave.", "danger");
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+          return;
+        }
+
+        try {
+          const docRef = doc(db, "chaves", chave);
+          const docSnap = await getDoc(docRef);
+
+          if (!docSnap.exists()) {
+            mostrarMensagem("Chave inválida. Verifique e tente novamente.", "danger");
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+            return;
+          }
+
+          const data = docSnap.data();
+          if (data.usada) {
+            mostrarMensagem("Esta chave já foi utilizada.", "warning");
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+            return;
+          }
+
+          chaveValidada = chave;
+          mostrarTelaLogin();
+
+        } catch (error) {
+          console.error("Erro ao validar chave:", error);
+          mostrarMensagem("Ocorreu um erro ao validar a chave. Tente novamente.", "danger");
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+        }
+      }
+
+      function mostrarTelaLogin() {
+        container.innerHTML = `
+          <h3 class="mb-4 text-center text-success">Chave validada com sucesso!</h3>
+          <p class="text-muted mb-4">Agora faça login com sua conta Google para vincular sua chave</p>
+          <button id="btnLoginGoogle" class="btn btn-google w-100 py-2">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" class="google-icon">
+            Entrar com Google
+          </button>
+          <div id="msgLogin" class="mt-3"></div>
+        `;
+
+        document.getElementById("btnLoginGoogle").addEventListener("click", loginGoogle);
+      }
+
+      async function loginGoogle() {
+        const btn = document.getElementById("btnLoginGoogle");
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Conectando...';
+
+        try {
+          const resultado = await signInWithPopup(auth, provider);
+          const user = resultado.user;
+
+          // Atualiza a chave no Firestore
+          const docRef = doc(db, "chaves", chaveValidada);
+          await updateDoc(docRef, {
+            usada: true,
+            email: user.email,
+            dataAtivacao: new Date().toISOString()
+          });
+
+          // Mostra tela de sucesso
+          container.innerHTML = `
+            <div class="success-screen">
+              <div class="success-icon">✓</div>
+              <h3 class="text-success">Ativação concluída!</h3>
+              <p class="mt-3">O curso foi ativado com sucesso para:</p>
+              <p class="font-weight-bold">${user.email}</p>
+              <p class="mt-4">Agora você já pode acessar todo o conteúdo do curso.</p>
+              <a href="#" class="btn btn-primary mt-3">Acessar Curso</a>
+            </div>
+          `;
+
+        } catch (error) {
+          console.error("Erro no login:", error);
+          mostrarMensagem("Ocorreu um erro durante o login. Tente novamente.", "danger");
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+        }
+      }
+
+      // Inicia com a tela de chave
+      mostrarTelaChave();
+    });
+  </script>
 </body>
 </html>
