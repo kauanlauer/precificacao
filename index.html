@@ -1,202 +1,23 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ativação do Curso de Precificação</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <style>
-    :root {
-      --primary-color: #4e73df;
-      --success-color: #1cc88a;
-      --warning-color: #f6c23e;
-      --danger-color: #e74a3b;
-    }
-    
-    body {
-      background: linear-gradient(135deg, #f8f9fc 0%, #d1d9f0 100%);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-    .activation-card {
-      border: none;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      transition: transform 0.3s ease;
-      max-width: 450px;
-    }
-    
-    .activation-card:hover {
-      transform: translateY(-5px);
-    }
-    
-    .card-header {
-      background: var(--primary-color);
-      color: white;
-      text-align: center;
-      padding: 1.5rem;
-      border-bottom: none;
-    }
-    
-    .card-body {
-      padding: 2rem;
-    }
-    
-    .logo {
-      width: 80px;
-      margin-bottom: 1rem;
-    }
-    
-    .form-control {
-      border-radius: 8px;
-      padding: 12px 15px;
-      border: 2px solid #e3e6f0;
-      transition: all 0.3s;
-    }
-    
-    .form-control:focus {
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
-    }
-    
-    .btn-primary {
-      background-color: var(--primary-color);
-      border: none;
-      border-radius: 8px;
-      padding: 12px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      transition: all 0.3s;
-    }
-    
-    .btn-primary:hover {
-      background-color: #3a5ccc;
-      transform: translateY(-2px);
-    }
-    
-    .btn-google {
-      background-color: #4285F4;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 8px;
-      padding: 12px;
-      font-weight: 600;
-      transition: all 0.3s;
-    }
-    
-    .btn-google:hover {
-      background-color: #357ABD;
-      color: white;
-      transform: translateY(-2px);
-    }
-    
-    .google-icon {
-      width: 20px;
-      height: 20px;
-      margin-right: 10px;
-    }
-    
-    .info-box {
-      background-color: #f8f9fc;
-      border-left: 4px solid var(--primary-color);
-      padding: 15px;
-      border-radius: 4px;
-      margin-bottom: 20px;
-    }
-    
-    .info-box i {
-      color: var(--primary-color);
-      margin-right: 10px;
-    }
-    
-    .success-screen {
-      text-align: center;
-      padding: 20px;
-    }
-    
-    .success-icon {
-      font-size: 80px;
-      color: var(--success-color);
-      margin-bottom: 20px;
-      animation: bounce 1s;
-    }
-    
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-      40% {transform: translateY(-20px);}
-      60% {transform: translateY(-10px);}
-    }
-    
-    .step-indicator {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 30px;
-      position: relative;
-    }
-    
-    .step {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background-color: #e3e6f0;
-      color: #b7b9cc;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      z-index: 2;
-    }
-    
-    .step.active {
-      background-color: var(--primary-color);
-      color: white;
-    }
-    
-    .step.completed {
-      background-color: var(--success-color);
-      color: white;
-    }
-    
-    .step-line {
-      position: absolute;
-      top: 15px;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background-color: #e3e6f0;
-      z-index: 1;
-    }
-    
-    .step-line-progress {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      background-color: var(--primary-color);
-      transition: width 0.3s ease;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ativação do Curso</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="d-flex align-items-center justify-content-center min-vh-100 p-3">
-  <div class="activation-card">
-    <div class="card-header">
-      <h3><i class="fas fa-key"></i> Ativação do Curso</h3>
-    </div>
-    <div class="card-body" id="container">
-      <!-- Conteúdo será injetado via JavaScript -->
-    </div>
+<body>
+  <div class="container" id="container">
+    <!-- Conteúdo será carregado aqui -->
   </div>
 
-  <script type="module">
-    // Firebase SDK importações
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-app.js";
-    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-firestore.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-auth.js";
+  <!-- 1. Primeiro carregue o Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 
+  <script>
+    // 2. Configuração do Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAhD-K0KUEH-jc6t3HKGa5zQVwt8dTM6H4",
       authDomain: "cursoprecificacao-464f0.firebaseapp.com",
@@ -206,215 +27,69 @@
       appId: "1:835557952690:web:d2e6f84856d5eec1084dab"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const container = document.getElementById("container");
-      let chaveValidada = null;
-      let currentStep = 1;
-
-      function updateStepIndicator() {
-        const step1 = document.getElementById("step1");
-        const step2 = document.getElementById("step2");
-        const stepLine = document.querySelector(".step-line-progress");
-
-        if (currentStep === 1) {
-          step1.classList.add("active");
-          step2.classList.remove("active", "completed");
-          stepLine.style.width = "0%";
-        } else {
-          step1.classList.remove("active");
-          step1.classList.add("completed");
-          step2.classList.add("active");
-          stepLine.style.width = "100%";
-        }
-      }
-
-      function mostrarMensagem(texto, tipo = "danger") {
-        const msg = document.getElementById("msg") || document.createElement("div");
-        msg.id = "msg";
-        msg.className = `alert alert-${tipo} mt-3`;
-        msg.innerHTML = `<i class="fas fa-${tipo === 'danger' ? 'exclamation-triangle' : tipo === 'success' ? 'check-circle' : 'info-circle'} me-2"></i> ${texto}`;
-        
-        if (!document.getElementById("msg")) {
-          container.appendChild(msg);
-          // Remove a mensagem após 5 segundos
-          setTimeout(() => {
-            msg.remove();
-          }, 5000);
-        }
-      }
-
-      function mostrarTelaChave() {
-        currentStep = 1;
-        container.innerHTML = `
-          <div class="step-indicator">
-            <div class="step active" id="step1">1</div>
-            <div class="step" id="step2">2</div>
-            <div class="step-line"><div class="step-line-progress"></div></div>
+    // 3. Inicialize o Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+    
+    // 4. Verifique se o Firebase foi carregado
+    console.log("Firebase carregado?", typeof firebase !== "undefined");
+    
+    // 5. Função para mostrar a tela de chave
+    function mostrarTelaChave() {
+      document.getElementById("container").innerHTML = `
+        <div class="card mt-5" style="max-width: 500px; margin: 0 auto;">
+          <div class="card-body">
+            <h3 class="text-center mb-4">Ativação do Curso</h3>
+            <input type="text" id="inputChave" class="form-control mb-3" placeholder="Digite sua chave" autofocus>
+            <button id="btnValidar" class="btn btn-primary w-100">Validar</button>
+            <div id="mensagem" class="mt-3"></div>
           </div>
-          
-          <h4 class="text-center mb-4">Insira sua chave de ativação</h4>
-          
-          <div class="info-box">
-            <i class="fas fa-info-circle"></i>
-            <span>Sua chave é única e intransferível. Ela será vinculada permanentemente à sua conta Google.</span>
-          </div>
-          
-          <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="inputChave" placeholder="Ex: ABC123-KAUAN" autofocus>
-            <label for="inputChave"><i class="fas fa-key me-2"></i>Chave de ativação</label>
-          </div>
-          
-          <button id="btnValidarChave" class="btn btn-primary w-100">
-            <i class="fas fa-check-circle me-2"></i>Validar Chave
-          </button>
-          
-          <div id="msg"></div>
-        `;
+        </div>
+      `;
+      
+      document.getElementById("btnValidar").addEventListener("click", validarChave);
+    }
 
-        document.getElementById("btnValidarChave").addEventListener("click", validarChave);
-        document.getElementById("inputChave").addEventListener("keypress", (e) => {
-          if (e.key === "Enter") validarChave();
-        });
-        
-        updateStepIndicator();
+    // 6. Função para validar a chave
+    async function validarChave() {
+      const chave = document.getElementById("inputChave").value.trim();
+      const mensagem = document.getElementById("mensagem");
+      
+      if(!chave) {
+        mensagem.innerHTML = '<div class="alert alert-danger">Digite uma chave</div>';
+        return;
       }
-
-      async function validarChave() {
-        const btn = document.getElementById("btnValidarChave");
-        const originalText = btn.innerHTML;
-        btn.disabled = true;
-        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span> Validando...';
-
-        const chave = document.getElementById("inputChave").value.trim().toUpperCase();
+      
+      try {
+        const docRef = db.collection("chaves").doc(chave);
+        const doc = await docRef.get();
         
-        if (!chave) {
-          mostrarMensagem("Por favor, digite sua chave de ativação.", "danger");
-          btn.disabled = false;
-          btn.innerHTML = originalText;
+        if(!doc.exists) {
+          mensagem.innerHTML = '<div class="alert alert-danger">Chave inválida</div>';
           return;
         }
-
-        try {
-          const docRef = doc(db, "chaves", chave);
-          const docSnap = await getDoc(docRef);
-
-          if (!docSnap.exists()) {
-            mostrarMensagem("Chave inválida. Verifique e tente novamente.", "danger");
-            btn.disabled = false;
-            btn.innerHTML = originalText;
-            return;
-          }
-
-          const data = docSnap.data();
-          if (data.usada) {
-            mostrarMensagem("Esta chave já foi utilizada por outra conta.", "warning");
-            btn.disabled = false;
-            btn.innerHTML = originalText;
-            return;
-          }
-
-          chaveValidada = chave;
-          currentStep = 2;
-          mostrarTelaLogin();
-
-        } catch (error) {
-          console.error("Erro ao validar chave:", error);
-          mostrarMensagem("Ocorreu um erro ao validar a chave. Tente novamente.", "danger");
-          btn.disabled = false;
-          btn.innerHTML = originalText;
-        }
-      }
-
-      function mostrarTelaLogin() {
-        updateStepIndicator();
         
-        container.innerHTML = `
-          <div class="step-indicator">
-            <div class="step completed">1</div>
-            <div class="step active" id="step2">2</div>
-            <div class="step-line"><div class="step-line-progress" style="width: 100%"></div></div>
-          </div>
-          
-          <h4 class="text-center text-success mb-4"><i class="fas fa-check-circle me-2"></i>Chave validada com sucesso!</h4>
-          
-          <div class="info-box">
-            <i class="fas fa-info-circle"></i>
-            <span>Agora vincule sua chave à sua conta Google. Esta associação será permanente e não poderá ser transferida.</span>
-          </div>
-          
-          <button id="btnLoginGoogle" class="btn btn-google w-100">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" class="google-icon">
-            Vincular com Google
-          </button>
-          
-          <div id="msgLogin" class="mt-3"></div>
-        `;
-
-        document.getElementById("btnLoginGoogle").addEventListener("click", loginGoogle);
-      }
-
-      async function loginGoogle() {
-        const btn = document.getElementById("btnLoginGoogle");
-        const originalText = btn.innerHTML;
-        btn.disabled = true;
-        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span> Conectando...';
-
-        try {
-          const resultado = await signInWithPopup(auth, provider);
-          const user = resultado.user;
-
-          // Atualiza a chave no Firestore
-          const docRef = doc(db, "chaves", chaveValidada);
-          await updateDoc(docRef, {
-            usada: true,
-            email: user.email,
-            dataAtivacao: new Date().toISOString(),
-            uid: user.uid
-          });
-
-          // Mostra tela de sucesso
-          container.innerHTML = `
-            <div class="success-screen">
-              <div class="success-icon"><i class="fas fa-check-circle"></i></div>
-              <h3 class="text-success mb-4">Ativação concluída com sucesso!</h3>
-              
-              <div class="card mb-4">
-                <div class="card-body text-start">
-                  <h5><i class="fas fa-user-circle text-primary me-2"></i>Informações da ativação:</h5>
-                  <hr>
-                  <p class="mb-2"><strong>Chave:</strong> ${chaveValidada}</p>
-                  <p class="mb-2"><strong>Conta vinculada:</strong> ${user.email}</p>
-                  <p class="mb-0"><strong>Data:</strong> ${new Date().toLocaleDateString('pt-BR')}</p>
-                </div>
+        mensagem.innerHTML = '<div class="alert alert-success">Chave válida! Redirecionando...</div>';
+        setTimeout(() => {
+          document.getElementById("container").innerHTML = `
+            <div class="card mt-5" style="max-width: 500px; margin: 0 auto;">
+              <div class="card-body text-center">
+                <h3 class="text-success">Ativação concluída!</h3>
+                <p>Chave: ${chave}</p>
               </div>
-              
-              <div class="alert alert-info">
-                <i class="fas fa-exclamation-circle me-2"></i>
-                Esta chave agora está permanentemente vinculada à sua conta Google e não pode ser transferida.
-              </div>
-              
-              <a href="#" class="btn btn-primary mt-3 w-100">
-                <i class="fas fa-play-circle me-2"></i>Acessar Curso
-              </a>
             </div>
           `;
-
-        } catch (error) {
-          console.error("Erro no login:", error);
-          mostrarMensagem("Ocorreu um erro durante o login. Tente novamente.", "danger");
-          btn.disabled = false;
-          btn.innerHTML = originalText;
-        }
+        }, 2000);
+        
+      } catch(error) {
+        console.error("Erro no Firebase:", error);
+        mensagem.innerHTML = '<div class="alert alert-danger">Erro ao validar chave</div>';
       }
+    }
 
-      // Inicia com a tela de chave
-      mostrarTelaChave();
-    });
+    // 7. Inicie o aplicativo
+    mostrarTelaChave();
   </script>
 </body>
 </html>
